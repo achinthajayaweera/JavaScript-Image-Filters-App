@@ -17,6 +17,18 @@ const resetBtn = document.getElementById("reset");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+const resetValues = () => {
+    ctx.filter = "none";
+    saturate.value = "100";
+    contrast.value = "100";
+    brightness.value = "100";
+    sepia.value = "0";
+    grayscale.value = "0";
+    blurr.value = "0";
+    hueRotate.value = "0";
+    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+};
+
 window.onload = () => {
     downloadBtn.style.display = "none";
     resetBtn.style.display = "none";
@@ -54,3 +66,5 @@ filters.forEach((filter) => {
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
     });
 });
+
+resetBtn.addEventListener("click", resetValues);
