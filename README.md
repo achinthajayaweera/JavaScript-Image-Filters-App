@@ -1,16 +1,24 @@
-# JavaScript Image Filters App
+# 🖼️ JavaScript Image Filters App
 
-A simple web app that allows users to upload an image, apply real-time filters, and download the edited version using HTML, CSS, and JavaScript.
+A simple and responsive web app that allows users to **upload an image**, **apply real-time filters**, and **download the edited version** — all done using **HTML**, **CSS**, and **JavaScript**.
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- HTML5
-- CSS3
-- JavaScript (ES6)
+- **HTML5** – Layout and structure
+- **CSS3** – Responsive styling and layout
+- **JavaScript (ES6)** – Image handling, filters, and download functionality
 
-## Features
+## ✨ Features
 
-- Upload your own image
-- Apply filters: Brightness, Contrast, Saturation, Blur, Grayscale, Sepia, Hue Rotate
-- Live preview of filter effects
-- Reset filters to original
+✅ **Upload Your Own Image** from your device
+✅ **Apply CSS-Based Filters** like:
+  - Brightness
+  - Contrast
+  - Saturation
+  - Blur
+  - Grayscale
+  - Sepia
+✅ **Live Preview** of filter effects in real-time
+✅ **Download Final Image** with applied filters
+✅ **Reset Filters** to original image
+✅ **Responsive Design** for mobile and desktop
