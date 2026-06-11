@@ -24,6 +24,12 @@ body {
     width: 1000px;
     max-width: 80%;
     min-height: 800px;
+
+    @media (max-width: 900px) {
+        flex-direction: column-reverse;
+        justify-content: center;
+        gap: 20px;
+    }
 }
 
 .img {
@@ -32,6 +38,10 @@ body {
     flex-direction: column;
     gap: 50px;
     align-items: center;
+
+    @media (max-width: 900px) {
+        width: 100%;
+    }
 }
 
 .img img,
@@ -56,6 +66,10 @@ canvas {
 
 .filters {
     width: 50%;
+
+    @media (max-width: 900px) {
+        width: 100%;
+    }
 }
 
 .filters ul,
@@ -63,6 +77,10 @@ canvas {
     display: flex;
     flex-direction: column;
     gap: 25px;
+
+    @media (max-width:991px) {
+        gap: 10px;
+    }
 }
 
 .filters label {
