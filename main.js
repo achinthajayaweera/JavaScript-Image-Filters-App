@@ -39,3 +39,18 @@ uploadBtn.addEventListener("change", () => {
         image.style.display = "none";
     };
 });
+
+filters.forEach((filter) => {
+    filter.addEventListener("input", (e) => {
+        ctx.filter = `
+        saturate(${saturate.value}%)
+        contrast(${contrast.value}%)
+        brightness(${brightness.value}%)
+        sepia(${sepia.value}%)
+        grayscale(${grayscale.value}%)
+        blur(${blurr.value}px)
+        hue-rotate(${hueRotate.value}deg)
+        `;
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+    });
+});
