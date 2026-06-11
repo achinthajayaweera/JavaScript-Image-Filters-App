@@ -36,6 +36,7 @@ window.onload = () => {
 };
 
 uploadBtn.addEventListener("change", () => {
+    resetValues();
     downloadBtn.style.display = "block";
     resetBtn.style.display = "block";
     imgBox.style.display = "block";
@@ -68,3 +69,7 @@ filters.forEach((filter) => {
 });
 
 resetBtn.addEventListener("click", resetValues);
+
+downloadBtn.addEventListener("click", () => {
+    downloadBtn.href = canvas.toDataURL();
+});
