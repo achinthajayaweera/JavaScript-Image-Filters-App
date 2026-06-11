@@ -16,3 +16,9 @@ const resetBtn = document.getElementById("reset");
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+
+window.onload = () => {
+    downloadBtn.style.display = "none";
+    resetBtn.style.display = "none";
+    imgBox.style.display = "none";
+};
