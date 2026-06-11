@@ -22,3 +22,20 @@ window.onload = () => {
     resetBtn.style.display = "none";
     imgBox.style.display = "none";
 };
+
+uploadBtn.addEventListener("change", () => {
+    downloadBtn.style.display = "block";
+    resetBtn.style.display = "block";
+    imgBox.style.display = "block";
+    let file = new FileReader();
+    file.readAsDataURL(uploadBtn.files[0]);
+    file.onload = () => {
+        img.src = file.result;
+    };
+    image.onload = () => {
+        canvas.width = image.width;
+        canvas.height = image.height;
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        image.style.display = "none";
+    };
+});
