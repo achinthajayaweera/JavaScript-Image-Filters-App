@@ -4,60 +4,140 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Image Filters</title>
+    <title>PixelForge — Image Filters</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css" />
     <script defer src="main.js"></script>
 </head>
 
 <body>
-    <div class="container">
-        <div class="filters">
-            <ul>
-                <li>
-                    <label for="saturate">Saturate</label>
-                    <input class="filter" type="range" id="saturate" min="0" max="200" value="100" />
-                </li>
-                <li>
-                    <label for="contrast">Contrast</label>
-                    <input class="filter" type="range" id="contrast" min="0" max="200" value="100" />
-                </li>
-                <li>
-                    <label for="brightness">Brightness</label>
-                    <input class="filter" type="range" id="brightness" min="0" max="200" value="100" />
-                </li>
-                <li>
-                    <label for="sepia">Sepia</label>
-                    <input class="filter" type="range" id="sepia" min="0" max="200" value="0" />
-                </li>
-                <li>
-                    <label for="grayscale">Grayscale</label>
-                    <input class="filter" type="range" id="grayscale" min="0" max="100" value="0" />
-                </li>
-                <li>
-                    <label for="blur">Blur</label>
-                    <input class="filter" type="range" id="blur" min="0" max="10" step="0.1" value="0" />
-                </li>
-                <li>
-                    <label for="hue-rotate">Hue Rotate</label>
-                    <input class="filter" type="range" id="hue-rotate" min="0" max="350" value="0" />
-                </li>
-                <li>
-                    <a download="image" id="download">Download</a>
-                    <span id="reset">Reset</span>
-                </li>
-            </ul>
+
+    <header class="topbar">
+        <div class="logo">Pixel<span>Forge</span></div>
+        <div class="topbar-right">
+            <span class="badge" id="status-badge">No image loaded</span>
         </div>
-        <div class="img">
-            <div class="img-box">
+    </header>
+
+    <main class="app">
+
+        <!-- LEFT: Controls Panel -->
+        <aside class="panel">
+
+            <section class="panel-section">
+                <h3 class="section-title">Presets</h3>
+                <div class="presets-grid">
+                    <button class="preset-btn" data-preset="vivid">Vivid</button>
+                    <button class="preset-btn" data-preset="noir">Noir</button>
+                    <button class="preset-btn" data-preset="vintage">Vintage</button>
+                    <button class="preset-btn" data-preset="fade">Fade</button>
+                    <button class="preset-btn" data-preset="cold">Cold</button>
+                    <button class="preset-btn" data-preset="warm">Warm</button>
+                </div>
+            </section>
+
+            <section class="panel-section">
+                <h3 class="section-title">Adjustments</h3>
+                <ul class="filters-list">
+                    <li class="filter-row">
+                        <div class="filter-label-row">
+                            <label for="brightness">Brightness</label>
+                            <span class="filter-val" id="brightness-val">100</span>
+                        </div>
+                        <input class="filter" type="range" id="brightness" min="0" max="200" value="100" />
+                    </li>
+                    <li class="filter-row">
+                        <div class="filter-label-row">
+                            <label for="contrast">Contrast</label>
+                            <span class="filter-val" id="contrast-val">100</span>
+                        </div>
+                        <input class="filter" type="range" id="contrast" min="0" max="200" value="100" />
+                    </li>
+                    <li class="filter-row">
+                        <div class="filter-label-row">
+                            <label for="saturate">Saturation</label>
+                            <span class="filter-val" id="saturate-val">100</span>
+                        </div>
+                        <input class="filter" type="range" id="saturate" min="0" max="200" value="100" />
+                    </li>
+                    <li class="filter-row">
+                        <div class="filter-label-row">
+                            <label for="blur">Blur</label>
+                            <span class="filter-val" id="blur-val">0</span>
+                        </div>
+                        <input class="filter" type="range" id="blur" min="0" max="10" step="0.1" value="0" />
+                    </li>
+                    <li class="filter-row">
+                        <div class="filter-label-row">
+                            <label for="sepia">Sepia</label>
+                            <span class="filter-val" id="sepia-val">0</span>
+                        </div>
+                        <input class="filter" type="range" id="sepia" min="0" max="200" value="0" />
+                    </li>
+                    <li class="filter-row">
+                        <div class="filter-label-row">
+                            <label for="grayscale">Grayscale</label>
+                            <span class="filter-val" id="grayscale-val">0</span>
+                        </div>
+                        <input class="filter" type="range" id="grayscale" min="0" max="100" value="0" />
+                    </li>
+                    <li class="filter-row">
+                        <div class="filter-label-row">
+                            <label for="hue-rotate">Hue Rotate</label>
+                            <span class="filter-val" id="hue-rotate-val">0°</span>
+                        </div>
+                        <input class="filter" type="range" id="hue-rotate" min="0" max="350" value="0" />
+                    </li>
+                    <li class="filter-row">
+                        <div class="filter-label-row">
+                            <label for="invert">Invert</label>
+                            <span class="filter-val" id="invert-val">0</span>
+                        </div>
+                        <input class="filter" type="range" id="invert" min="0" max="100" value="0" />
+                    </li>
+                </ul>
+            </section>
+
+            <section class="panel-section">
+                <h3 class="section-title">Transform</h3>
+                <div class="transform-btns">
+                    <button class="transform-btn" id="flip-h" title="Flip Horizontal">⇄ Flip H</button>
+                    <button class="transform-btn" id="flip-v" title="Flip Vertical">⇅ Flip V</button>
+                    <button class="transform-btn" id="rotate-left" title="Rotate Left">↺ Rotate</button>
+                </div>
+            </section>
+
+            <section class="panel-section actions-section">
+                <button class="action-btn reset-btn" id="reset">↺ Reset All</button>
+                <a class="action-btn download-btn" download="pixelforge-image" id="download">↓ Download</a>
+                <label class="action-btn upload-btn" for="upload">+ New Image</label>
+                <input type="file" id="upload" accept="image/*" />
+            </section>
+
+        </aside>
+
+        <!-- RIGHT: Canvas Area -->
+        <div class="canvas-area">
+            <div class="drop-zone" id="drop-zone">
+                <div class="drop-content">
+                    <div class="drop-icon">🖼</div>
+                    <p class="drop-title">Drop your image here</p>
+                    <p class="drop-sub">or click to browse</p>
+                    <label class="drop-upload-btn" for="upload">Choose Image</label>
+                </div>
+            </div>
+            <div class="img-box" id="img-box">
                 <img id="img" alt="uploaded image" />
                 <canvas id="canvas"></canvas>
-            </div>
-            <div class="upload">
-                <label for="upload">Upload</label>
-                <input type="file" id="upload" />
+                <div class="img-overlay" id="img-overlay">
+                    <span>Before</span>
+                </div>
             </div>
         </div>
-    </div>
-</body>
 
+    </main>
+
+</body>
 </html>
