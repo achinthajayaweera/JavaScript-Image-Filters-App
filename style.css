@@ -410,25 +410,37 @@ input[type="range"]::-moz-range-thumb {
     border-radius: 4px;
 }
 
-/* ── OVERLAY LABEL ───────────────────────────────── */
-.img-overlay {
+
+/* ── BEFORE BUTTON ───────────────────────────────── */
+.before-btn {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    background: rgba(0,0,0,0.6);
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.72);
     color: #fff;
     font-family: var(--mono);
-    font-size: 0.62rem;
-    padding: 3px 9px;
-    border-radius: 3px;
-    letter-spacing: 0.08em;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.2s;
+    font-size: 0.68rem;
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    backdrop-filter: blur(6px);
+    transition: background 0.15s, border-color 0.15s;
+    user-select: none;
+    white-space: nowrap;
 }
 
-.img-box:hover .img-overlay {
-    opacity: 1;
+.before-btn:hover {
+    background: rgba(229, 36, 26, 0.75);
+    border-color: var(--accent);
+}
+
+.before-btn.viewing {
+    background: rgba(229, 36, 26, 0.85);
+    border-color: var(--accent);
+    color: #fff;
 }
 
 /* ── SCROLLBAR ───────────────────────────────────── */

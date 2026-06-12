@@ -232,3 +232,40 @@ window.onload = () => {
     downloadBtn.style.pointerEvents = "none";
     refreshAllDisplays();
 };
+
+// ── BEFORE BUTTON (hold to preview original) ──────────────────────
+const beforeBtn = document.getElementById("before-btn");
+
+const showOriginal = () => {
+    if (!imageLoaded) return;
+    beforeBtn.textContent = "⊙ Viewing original...";
+    beforeBtn.classList.add("viewing");
+    const w = image.naturalWidth;
+    const h = image.naturalHeight;
+    const isRotated = rotation % 2 !== 0;
+    canvas.width  = isRotated ? h : w;
+    canvas.height = isRotated ? w : h;
+    ctx.save();
+    ctx.filter = "none";
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.rotate((rotation * 90 * Math.PI) / 180);
+    ctx.scale(flippedH ? -1 : 1, flippedV ? -1 : 1);
+    ctx.drawImage(image, -w / 2, -h / 2, w, h);
+    ctx.restore();
+};
+
+const showFiltered = () => {
+    if (!imageLoaded) return;
+    beforeBtn.textContent = "⊙ Hold to see original";
+    beforeBtn.classList.remove("viewing");
+    applyFiltersAndDraw();
+};
+
+// Mouse events
+beforeBtn.addEventListener("mousedown",  showOriginal);
+beforeBtn.addEventListener("mouseup",    showFiltered);
+beforeBtn.addEventListener("mouseleave", showFiltered);
+
+// Touch events
+beforeBtn.addEventListener("touchstart", (e) => { e.preventDefault(); showOriginal(); });
+beforeBtn.addEventListener("touchend",   (e) => { e.preventDefault(); showFiltered(); });
