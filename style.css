@@ -398,7 +398,10 @@ input[type="range"]::-moz-range-thumb {
     max-height: calc(100vh - 72px);
 }
 
-.img-box img,
+.img-box img {
+    display: none !important;
+}
+
 .img-box canvas {
     max-width: 100%;
     max-height: calc(100vh - 90px);

@@ -129,6 +129,8 @@ const loadImage = (file) => {
     reader.onload = (e) => {
         image.onload = () => {
             imageLoaded = true;
+            image.style.display    = "none";
+            canvas.style.display   = "block";
             dropZone.style.display = "none";
             imgBox.style.display   = "block";
             imgBox.classList.add("visible");
