@@ -8,15 +8,15 @@ const blurr      = document.getElementById("blur");
 const hueRotate  = document.getElementById("hue-rotate");
 const invert     = document.getElementById("invert");
 
-const filters    = document.querySelectorAll(".filter");
-const image      = document.getElementById("img");
-const imgBox     = document.getElementById("img-box");
-const dropZone   = document.getElementById("drop-zone");
+const filters     = document.querySelectorAll(".filter");
+const image       = document.getElementById("img");
+const imgBox      = document.getElementById("img-box");
+const dropZone    = document.getElementById("drop-zone");
 
-const downloadBtn = document.getElementById("download");
-const uploadBtn   = document.getElementById("upload");
-const resetBtn    = document.getElementById("reset");
-const statusBadge = document.getElementById("status-badge");
+const downloadBtn   = document.getElementById("download");
+const uploadBtn     = document.getElementById("upload");
+const resetBtn      = document.getElementById("reset");
+const statusBadge   = document.getElementById("status-badge");
 
 const flipHBtn      = document.getElementById("flip-h");
 const flipVBtn      = document.getElementById("flip-v");
@@ -27,9 +27,10 @@ const canvas = document.getElementById("canvas");
 const ctx    = canvas.getContext("2d");
 
 // ── STATE ─────────────────────────────────────────────────────────
-let flippedH   = false;
-let flippedV   = false;
-let rotation   = 0; // in 90° steps: 0, 1, 2, 3
+let flippedH = false;
+let flippedV = false;
+let rotation = 0;
+let imageLoaded = false;
 
 // ── VALUE DISPLAY MAPPING ─────────────────────────────────────────
 const valDisplays = {
@@ -45,20 +46,22 @@ const valDisplays = {
 
 // ── PRESETS ───────────────────────────────────────────────────────
 const presets = {
-    vivid:   { brightness: 110, contrast: 120, saturate: 160, blur: 0, sepia: 0,  grayscale: 0, "hue-rotate": 0,   invert: 0 },
-    noir:    { brightness: 90,  contrast: 140, saturate: 0,   blur: 0, sepia: 0,  grayscale: 100, "hue-rotate": 0, invert: 0 },
-    vintage: { brightness: 95,  contrast: 90,  saturate: 80,  blur: 0, sepia: 60, grayscale: 0, "hue-rotate": 0,   invert: 0 },
-    fade:    { brightness: 115, contrast: 80,  saturate: 70,  blur: 0, sepia: 20, grayscale: 20, "hue-rotate": 0,  invert: 0 },
-    cold:    { brightness: 100, contrast: 105, saturate: 90,  blur: 0, sepia: 0,  grayscale: 0, "hue-rotate": 180, invert: 0 },
-    warm:    { brightness: 105, contrast: 100, saturate: 120, blur: 0, sepia: 30, grayscale: 0, "hue-rotate": 20,  invert: 0 },
+    vivid:   { brightness: 110, contrast: 120, saturate: 160, blur: 0, sepia: 0,   grayscale: 0,   "hue-rotate": 0,   invert: 0 },
+    noir:    { brightness: 90,  contrast: 140, saturate: 0,   blur: 0, sepia: 0,   grayscale: 100, "hue-rotate": 0,   invert: 0 },
+    vintage: { brightness: 95,  contrast: 90,  saturate: 80,  blur: 0, sepia: 60,  grayscale: 0,   "hue-rotate": 0,   invert: 0 },
+    fade:    { brightness: 115, contrast: 80,  saturate: 70,  blur: 0, sepia: 20,  grayscale: 20,  "hue-rotate": 0,   invert: 0 },
+    cold:    { brightness: 100, contrast: 105, saturate: 90,  blur: 0, sepia: 0,   grayscale: 0,   "hue-rotate": 180, invert: 0 },
+    warm:    { brightness: 105, contrast: 100, saturate: 120, blur: 0, sepia: 30,  grayscale: 0,   "hue-rotate": 20,  invert: 0 },
 };
 
-// ── APPLY FILTER + TRANSFORM ──────────────────────────────────────
+// ── APPLY FILTERS + TRANSFORMS ────────────────────────────────────
 const applyFiltersAndDraw = () => {
+    if (!imageLoaded) return;
+
     const w = image.naturalWidth;
     const h = image.naturalHeight;
-
     const isRotated = rotation % 2 !== 0;
+
     canvas.width  = isRotated ? h : w;
     canvas.height = isRotated ? w : h;
 
@@ -73,7 +76,6 @@ const applyFiltersAndDraw = () => {
         hue-rotate(${hueRotate.value}deg)
         invert(${invert.value}%)
     `;
-
     ctx.translate(canvas.width / 2, canvas.height / 2);
     ctx.rotate((rotation * 90 * Math.PI) / 180);
     ctx.scale(flippedH ? -1 : 1, flippedV ? -1 : 1);
@@ -81,10 +83,17 @@ const applyFiltersAndDraw = () => {
     ctx.restore();
 };
 
-// ── UPDATE SLIDER VALUE DISPLAY ───────────────────────────────────
+// ── UPDATE VALUE DISPLAY ──────────────────────────────────────────
 const updateDisplay = (id, value) => {
     const d = valDisplays[id];
     if (d) d.el.textContent = value + d.suffix;
+};
+
+const refreshAllDisplays = () => {
+    Object.keys(valDisplays).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) updateDisplay(id, el.value);
+    });
 };
 
 // ── RESET ─────────────────────────────────────────────────────────
@@ -102,39 +111,36 @@ const resetValues = () => {
     flippedV = false;
     rotation = 0;
 
-    Object.keys(valDisplays).forEach(id => {
-        const el   = document.getElementById(id);
-        const suffix = valDisplays[id].suffix;
-        valDisplays[id].el.textContent = el.value + suffix;
-    });
-
+    flipHBtn.classList.remove("active");
+    flipVBtn.classList.remove("active");
     presetBtns.forEach(b => b.classList.remove("active"));
 
-    if (image.src) applyFiltersAndDraw();
+    refreshAllDisplays();
+    applyFiltersAndDraw();
 };
 
 // ── LOAD IMAGE ────────────────────────────────────────────────────
 const loadImage = (file) => {
     if (!file || !file.type.startsWith("image/")) return;
 
+    imageLoaded = false;
+
     const reader = new FileReader();
+    reader.onload = (e) => {
+        image.onload = () => {
+            imageLoaded = true;
+            dropZone.style.display = "none";
+            imgBox.style.display   = "block";
+            imgBox.classList.add("visible");
+            downloadBtn.style.opacity       = "1";
+            downloadBtn.style.pointerEvents = "all";
+            statusBadge.textContent = `${image.naturalWidth} × ${image.naturalHeight}px`;
+            statusBadge.classList.add("active");
+            resetValues();
+        };
+        image.src = e.target.result;
+    };
     reader.readAsDataURL(file);
-    reader.onload = () => {
-        image.src = reader.result;
-    };
-
-    image.onload = () => {
-        dropZone.style.display = "none";
-        imgBox.style.display   = "block";
-        imgBox.classList.add("visible");
-        downloadBtn.style.pointerEvents = "all";
-        downloadBtn.style.opacity = "1";
-        statusBadge.textContent  = `${image.naturalWidth} × ${image.naturalHeight}px`;
-        statusBadge.classList.add("active");
-
-        resetValues();
-        applyFiltersAndDraw();
-    };
 };
 
 // ── FILTER SLIDERS ────────────────────────────────────────────────
@@ -142,7 +148,7 @@ filters.forEach((filter) => {
     filter.addEventListener("input", () => {
         updateDisplay(filter.id, filter.value);
         presetBtns.forEach(b => b.classList.remove("active"));
-        if (image.src && image.complete) applyFiltersAndDraw();
+        applyFiltersAndDraw();
     });
 });
 
@@ -162,8 +168,7 @@ presetBtns.forEach((btn) => {
 
         presetBtns.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-
-        if (image.src && image.complete) applyFiltersAndDraw();
+        applyFiltersAndDraw();
     });
 });
 
@@ -171,23 +176,23 @@ presetBtns.forEach((btn) => {
 flipHBtn.addEventListener("click", () => {
     flippedH = !flippedH;
     flipHBtn.classList.toggle("active", flippedH);
-    if (image.src && image.complete) applyFiltersAndDraw();
+    applyFiltersAndDraw();
 });
 
 flipVBtn.addEventListener("click", () => {
     flippedV = !flippedV;
     flipVBtn.classList.toggle("active", flippedV);
-    if (image.src && image.complete) applyFiltersAndDraw();
+    applyFiltersAndDraw();
 });
 
 rotateLeftBtn.addEventListener("click", () => {
     rotation = (rotation + 1) % 4;
-    if (image.src && image.complete) applyFiltersAndDraw();
+    applyFiltersAndDraw();
 });
 
 // ── UPLOAD ────────────────────────────────────────────────────────
 uploadBtn.addEventListener("change", () => {
-    loadImage(uploadBtn.files[0]);
+    if (uploadBtn.files[0]) loadImage(uploadBtn.files[0]);
 });
 
 // ── DRAG & DROP ───────────────────────────────────────────────────
@@ -208,8 +213,7 @@ dropZone.addEventListener("click", () => uploadBtn.click());
 });
 
 dropZone.addEventListener("drop", (e) => {
-    const file = e.dataTransfer.files[0];
-    loadImage(file);
+    loadImage(e.dataTransfer.files[0]);
 });
 
 // ── DOWNLOAD ─────────────────────────────────────────────────────
@@ -217,17 +221,12 @@ downloadBtn.addEventListener("click", () => {
     downloadBtn.href = canvas.toDataURL("image/png");
 });
 
-// ── RESET ─────────────────────────────────────────────────────────
+// ── RESET BUTTON ──────────────────────────────────────────────────
 resetBtn.addEventListener("click", resetValues);
 
 // ── INITIAL STATE ─────────────────────────────────────────────────
 window.onload = () => {
     downloadBtn.style.opacity       = "0.4";
     downloadBtn.style.pointerEvents = "none";
-
-    Object.keys(valDisplays).forEach(id => {
-        const el     = document.getElementById(id);
-        const suffix = valDisplays[id].suffix;
-        valDisplays[id].el.textContent = el.value + suffix;
-    });
+    refreshAllDisplays();
 };
